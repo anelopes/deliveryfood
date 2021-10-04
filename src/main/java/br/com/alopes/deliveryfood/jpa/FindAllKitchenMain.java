@@ -2,6 +2,7 @@ package br.com.alopes.deliveryfood.jpa;
 
 import br.com.alopes.deliveryfood.DeliveryFoodApiApplication;
 import br.com.alopes.deliveryfood.domain.model.Kitchen;
+import br.com.alopes.deliveryfood.domain.repository.KitchenRepository;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -15,9 +16,9 @@ public class FindAllKitchenMain {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        RegisterKitchen registerKitchen = applicationContext.getBean(RegisterKitchen.class);
+        KitchenRepository repository = applicationContext.getBean(KitchenRepository.class);
 
-        List<Kitchen> kitchenList = registerKitchen.findAll();
+        List<Kitchen> kitchenList = repository.findAll();
         kitchenList.forEach(kitchen -> System.out.println(kitchen.getName()));
     }
 }

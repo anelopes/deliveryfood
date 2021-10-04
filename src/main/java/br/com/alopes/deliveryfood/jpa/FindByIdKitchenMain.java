@@ -2,6 +2,7 @@ package br.com.alopes.deliveryfood.jpa;
 
 import br.com.alopes.deliveryfood.DeliveryFoodApiApplication;
 import br.com.alopes.deliveryfood.domain.model.Kitchen;
+import br.com.alopes.deliveryfood.domain.repository.KitchenRepository;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -13,9 +14,9 @@ public class FindByIdKitchenMain {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        RegisterKitchen registerKitchen = applicationContext.getBean(RegisterKitchen.class);
+        KitchenRepository repository = applicationContext.getBean(KitchenRepository.class);
 
-        Kitchen kitchen = registerKitchen.findById(1L);
+        Kitchen kitchen = repository.findById(1L);
         System.out.println(kitchen.getName());
     }
 }

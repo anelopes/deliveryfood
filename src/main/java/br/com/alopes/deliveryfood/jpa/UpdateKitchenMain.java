@@ -2,6 +2,7 @@ package br.com.alopes.deliveryfood.jpa;
 
 import br.com.alopes.deliveryfood.DeliveryFoodApiApplication;
 import br.com.alopes.deliveryfood.domain.model.Kitchen;
+import br.com.alopes.deliveryfood.domain.repository.KitchenRepository;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -13,12 +14,12 @@ public class UpdateKitchenMain {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        RegisterKitchen registerKitchen = applicationContext.getBean(RegisterKitchen.class);
+        KitchenRepository repository = applicationContext.getBean(KitchenRepository.class);
 
         Kitchen kitchen1 = new Kitchen();
         kitchen1.setId(1L);
         kitchen1.setName("Brasileira");
 
-        registerKitchen.save(kitchen1);
+        repository.save(kitchen1);
     }
 }

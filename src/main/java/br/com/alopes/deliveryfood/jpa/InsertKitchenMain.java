@@ -2,6 +2,7 @@ package br.com.alopes.deliveryfood.jpa;
 
 import br.com.alopes.deliveryfood.DeliveryFoodApiApplication;
 import br.com.alopes.deliveryfood.domain.model.Kitchen;
+import br.com.alopes.deliveryfood.domain.repository.KitchenRepository;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -13,7 +14,7 @@ public class InsertKitchenMain {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        RegisterKitchen registerKitchen = applicationContext.getBean(RegisterKitchen.class);
+        KitchenRepository repository = applicationContext.getBean(KitchenRepository.class);
 
         Kitchen kitchen1 = new Kitchen();
         kitchen1.setName("Brasileira");
@@ -21,8 +22,8 @@ public class InsertKitchenMain {
         Kitchen kitchen2 = new Kitchen();
         kitchen2.setName("Japonesa");
 
-        kitchen1 = registerKitchen.save(kitchen1);
-        kitchen2 = registerKitchen.save(kitchen2);
+        kitchen1 = repository.save(kitchen1);
+        kitchen2 = repository.save(kitchen2);
 
         System.out.printf("%d - %s\n", kitchen1.getId(), kitchen1.getName());
         System.out.printf("%d - %s\n", kitchen2.getId(), kitchen2.getName());
