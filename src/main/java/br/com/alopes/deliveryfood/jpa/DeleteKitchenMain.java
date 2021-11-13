@@ -1,7 +1,6 @@
 package br.com.alopes.deliveryfood.jpa;
 
 import br.com.alopes.deliveryfood.DeliveryFoodApiApplication;
-import br.com.alopes.deliveryfood.domain.model.Kitchen;
 import br.com.alopes.deliveryfood.domain.repository.KitchenRepository;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -16,9 +15,6 @@ public class DeleteKitchenMain {
 
         KitchenRepository repository = applicationContext.getBean(KitchenRepository.class);
 
-        Kitchen kitchen1 = new Kitchen();
-        kitchen1.setId(1L);
-
-        repository.delete(kitchen1);
+        repository.delete(1L);
     }
 }

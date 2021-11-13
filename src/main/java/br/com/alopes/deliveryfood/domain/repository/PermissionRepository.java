@@ -10,8 +10,8 @@ public interface PermissionRepository {
 
     Permission findById(Long id);
 
-    Permission save(Permission kitchen);
+    Permission save(Permission permission);
 
-    void delete(Permission kitchen);
+    void delete(Long id);
 
 }

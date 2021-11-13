@@ -2,6 +2,7 @@ package br.com.alopes.deliveryfood.infra.repository;
 
 import br.com.alopes.deliveryfood.domain.model.Restaurant;
 import br.com.alopes.deliveryfood.domain.repository.RestaurantRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +34,12 @@ public class RestaurantRepositoryImpl implements RestaurantRepository {
 
     @Transactional
     @Override
-    public void delete(Restaurant restaurant) {
-        restaurant = findById(restaurant.getId());
+    public void delete(Long id) {
+        Restaurant restaurant = findById(id);
+
+        if (restaurant == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
         entityManager.remove(restaurant);
     }
 }

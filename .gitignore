@@ -215,4 +215,7 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+### Plugin JPA Buddy ###
+.jpb/*
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij,eclipse,maven,java

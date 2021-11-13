@@ -1,0 +1,77 @@
+package br.com.alopes.deliveryfood.domain.service;
+
+import br.com.alopes.deliveryfood.domain.exception.EntityInUseException;
+import br.com.alopes.deliveryfood.domain.exception.EntityNotFoundException;
+import br.com.alopes.deliveryfood.domain.exception.KitchenNotFoundException;
+import br.com.alopes.deliveryfood.domain.exception.RestaurantNotFoundException;
+import br.com.alopes.deliveryfood.domain.model.Kitchen;
+import br.com.alopes.deliveryfood.domain.model.Restaurant;
+import br.com.alopes.deliveryfood.domain.repository.KitchenRepository;
+import br.com.alopes.deliveryfood.domain.repository.RestaurantRepository;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class RegisterRestaurantService {
+
+    @Autowired
+    private RestaurantRepository restaurantRepository;
+
+    @Autowired
+    private KitchenRepository kitchenRepository;
+
+    public Restaurant save(Restaurant restaurant) {
+        Long kitchenId = restaurant.getKitchen().getId();
+        Kitchen kitchen = kitchenRepository.findById(kitchenId);
+        if (kitchen == null) {
+            throw new EntityNotFoundException(String.format("Não existe um cadastro de cozinha com código %d", kitchenId));
+        }
+        restaurant.setKitchen(kitchen);
+        return restaurantRepository.save(restaurant);
+    }
+
+    public List<Restaurant> findAll() {
+        return restaurantRepository.findAll();
+    }
+
+    public Restaurant findById(Long id) {
+        Restaurant restaurant = restaurantRepository.findById(id);
+        if (restaurant == null) {
+            throw new EntityNotFoundException(String.format("Não existe um cadastro de restaurante com código %d", id));
+        }
+        return restaurant;
+    }
+
+    public void delete(Long id) {
+        try {
+            restaurantRepository.delete(id);
+        } catch (EmptyResultDataAccessException ex) {
+            throw new EntityNotFoundException(String.format("Não existe um cadastro de restaurante com código %d", id));
+        } catch (DataIntegrityViolationException ex) {
+            throw new EntityInUseException(String.format("Restaurante de código %d não pode ser removida pois está em uso", id));
+        }
+    }
+
+    public Restaurant update(Long id, Restaurant restaurant) {
+        Restaurant restaurantFound = restaurantRepository.findById(id);
+        if (restaurantFound == null) {
+            throw new RestaurantNotFoundException(String.format("Não existe um cadastro de restaurante com código %d", id));
+        }
+
+        Long kitchenId = restaurant.getKitchen().getId();
+        Kitchen kitchen = kitchenRepository.findById(kitchenId);
+        if (kitchen == null) {
+            throw new KitchenNotFoundException(String.format("Não existe um cadastro de cozinha com código %d", kitchenId));
+        }
+        restaurant.setKitchen(kitchen);
+
+        BeanUtils.copyProperties(restaurant, restaurantFound, "id");
+        restaurantRepository.save(restaurantFound);
+        return restaurantFound;
+    }
+}

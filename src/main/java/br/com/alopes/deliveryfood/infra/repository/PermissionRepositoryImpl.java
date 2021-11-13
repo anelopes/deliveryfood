@@ -1,7 +1,9 @@
 package br.com.alopes.deliveryfood.infra.repository;
 
+import br.com.alopes.deliveryfood.domain.model.PaymentMethod;
 import br.com.alopes.deliveryfood.domain.model.Permission;
 import br.com.alopes.deliveryfood.domain.repository.PermissionRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +35,12 @@ public class PermissionRepositoryImpl implements PermissionRepository {
 
     @Transactional
     @Override
-    public void delete(Permission permission) {
-        permission = findById(permission.getId());
+    public void delete(Long id) {
+        Permission permission = findById(id);
+
+        if (permission == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
         entityManager.remove(permission);
     }
 }

@@ -10,8 +10,8 @@ public interface StateRepository {
 
     State findById(Long id);
 
-    State save(State kitchen);
+    State save(State state);
 
-    void delete(State kitchen);
+    void delete(Long id);
 
 }

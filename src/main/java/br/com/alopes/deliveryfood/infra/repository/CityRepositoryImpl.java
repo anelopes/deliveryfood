@@ -1,7 +1,9 @@
 package br.com.alopes.deliveryfood.infra.repository;
 
 import br.com.alopes.deliveryfood.domain.model.City;
+import br.com.alopes.deliveryfood.domain.model.City;
 import br.com.alopes.deliveryfood.domain.repository.CityRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +35,12 @@ public class CityRepositoryImpl implements CityRepository {
 
     @Transactional
     @Override
-    public void delete(City city) {
-        city = findById(city.getId());
+    public void delete(Long id) {
+        City city = findById(id);
+
+        if (city == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
         entityManager.remove(city);
     }
 }

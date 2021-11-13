@@ -2,6 +2,7 @@ package br.com.alopes.deliveryfood.infra.repository;
 
 import br.com.alopes.deliveryfood.domain.model.State;
 import br.com.alopes.deliveryfood.domain.repository.StateRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +34,12 @@ public class StateRepositoryImpl implements StateRepository {
 
     @Transactional
     @Override
-    public void delete(State state) {
-        state = findById(state.getId());
+    public void delete(Long id) {
+        State state = findById(id);
+
+        if (state == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
         entityManager.remove(state);
     }
 }

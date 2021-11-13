@@ -10,8 +10,8 @@ public interface PaymentMethodRepository {
 
     PaymentMethod findById(Long id);
 
-    PaymentMethod save(PaymentMethod kitchen);
+    PaymentMethod save(PaymentMethod paymentMethod);
 
-    void delete(PaymentMethod kitchen);
+    void delete(Long id);
 
 }

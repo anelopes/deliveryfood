@@ -2,6 +2,7 @@ package br.com.alopes.deliveryfood.infra.repository;
 
 import br.com.alopes.deliveryfood.domain.model.PaymentMethod;
 import br.com.alopes.deliveryfood.domain.repository.PaymentMethodRepository;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,14 +28,18 @@ public class PaymentMethodRepositoryImpl implements PaymentMethodRepository {
 
     @Transactional
     @Override
-    public PaymentMethod save(PaymentMethod PaymentMethod) {
-        return entityManager.merge(PaymentMethod);
+    public PaymentMethod save(PaymentMethod paymentMethod) {
+        return entityManager.merge(paymentMethod);
     }
 
     @Transactional
     @Override
-    public void delete(PaymentMethod PaymentMethod) {
-        PaymentMethod = findById(PaymentMethod.getId());
-        entityManager.remove(PaymentMethod);
+    public void delete(Long id) {
+        PaymentMethod paymentMethod = findById(id);
+
+        if (paymentMethod == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+        entityManager.remove(paymentMethod);
     }
 }

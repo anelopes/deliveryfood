@@ -10,8 +10,8 @@ public interface CityRepository {
 
     City findById(Long id);
 
-    City save(City kitchen);
+    City save(City city);
 
-    void delete(City kitchen);
+    void delete(Long id);
 
 }
