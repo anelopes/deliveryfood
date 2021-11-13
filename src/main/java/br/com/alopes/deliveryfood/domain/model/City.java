@@ -4,12 +4,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true) //gera somente para os campos que especifica ser incluso
 @Entity
-public class Restaurant {
+public class City {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,9 +16,7 @@ public class Restaurant {
 
     private String name;
 
-    private BigDecimal freightRate; // taxa de frete
-
     @ManyToOne
-    private Kitchen kitchen;
+    private State state;
 
 }
