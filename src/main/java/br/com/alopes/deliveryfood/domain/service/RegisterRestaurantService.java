@@ -31,10 +31,8 @@ public class RegisterRestaurantService {
 
     public Restaurant save(Restaurant restaurant) {
         Long kitchenId = restaurant.getKitchen().getId();
-        Kitchen kitchen = kitchenRepository.findById(kitchenId);
-        if (kitchen == null) {
-            throw new EntityNotFoundException(String.format("Não existe um cadastro de cozinha com código %d", kitchenId));
-        }
+        Kitchen kitchen = kitchenRepository.findById(kitchenId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Não existe um cadastro de cozinha com código %d", kitchenId)));
         restaurant.setKitchen(kitchen);
         return restaurantRepository.save(restaurant);
     }
@@ -44,16 +42,13 @@ public class RegisterRestaurantService {
     }
 
     public Restaurant findById(Long id) {
-        Restaurant restaurant = restaurantRepository.findById(id);
-        if (restaurant == null) {
-            throw new EntityNotFoundException(String.format("Não existe um cadastro de restaurante com código %d", id));
-        }
-        return restaurant;
+        return restaurantRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Não existe um cadastro de restaurante com código %d", id)));
     }
 
     public void delete(Long id) {
         try {
-            restaurantRepository.delete(id);
+            restaurantRepository.deleteById(id);
         } catch (EmptyResultDataAccessException ex) {
             throw new EntityNotFoundException(String.format("Não existe um cadastro de restaurante com código %d", id));
         } catch (DataIntegrityViolationException ex) {
@@ -62,28 +57,21 @@ public class RegisterRestaurantService {
     }
 
     public Restaurant update(Long id, Restaurant restaurant) {
-        Restaurant restaurantFound = restaurantRepository.findById(id);
-        if (restaurantFound == null) {
-            throw new RestaurantNotFoundException(String.format("Não existe um cadastro de restaurante com código %d", id));
-        }
+        Restaurant restaurantFound = restaurantRepository.findById(id)
+                .orElseThrow(() -> new RestaurantNotFoundException(String.format("Não existe um cadastro de restaurante com código %d", id)));
 
         Long kitchenId = restaurant.getKitchen().getId();
-        Kitchen kitchen = kitchenRepository.findById(kitchenId);
-        if (kitchen == null) {
-            throw new KitchenNotFoundException(String.format("Não existe um cadastro de cozinha com código %d", kitchenId));
-        }
+        Kitchen kitchen = kitchenRepository.findById(kitchenId)
+                .orElseThrow(() -> new KitchenNotFoundException(String.format("Não existe um cadastro de cozinha com código %d", kitchenId)));
         restaurant.setKitchen(kitchen);
 
         BeanUtils.copyProperties(restaurant, restaurantFound, "id");
-        restaurantRepository.save(restaurantFound);
-        return restaurantFound;
+        return restaurantRepository.save(restaurantFound);
     }
 
     public Restaurant partialUpdate(Long id, Map<String, Object> restaurant) {
-        Restaurant restaurantFound = restaurantRepository.findById(id);
-        if (restaurantFound == null) {
-            throw new RestaurantNotFoundException(String.format("Não existe um cadastro de restaurante com código %d", id));
-        }
+        Restaurant restaurantFound = restaurantRepository.findById(id)
+                .orElseThrow(() -> new RestaurantNotFoundException(String.format("Não existe um cadastro de restaurante com código %d", id)));
 
         ObjectMapper objectMapper = new ObjectMapper();
         Restaurant restaurantInput = objectMapper.convertValue(restaurant, Restaurant.class);

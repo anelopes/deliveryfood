@@ -27,16 +27,13 @@ public class RegisterKitchenService {
     }
 
     public Kitchen findById(Long id) {
-        Kitchen kitchen = kitchenRepository.findById(id);
-        if (kitchen == null) {
-            throw new EntityNotFoundException(String.format("Não existe um cadastro de cozinha com código %d", id));
-        }
-        return kitchen;
+        return kitchenRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Não existe um cadastro de cozinha com código %d", id)));
     }
 
     public void delete(Long id) {
         try {
-            kitchenRepository.delete(id);
+            kitchenRepository.deleteById(id);
         } catch (EmptyResultDataAccessException ex) {
             throw new EntityNotFoundException(String.format("Não existe um cadastro de cozinha com código %d", id));
         } catch (DataIntegrityViolationException ex) {
@@ -45,12 +42,9 @@ public class RegisterKitchenService {
     }
 
     public Kitchen update(Long id, Kitchen kitchen) {
-        Kitchen kitchenFound = kitchenRepository.findById(id);
-        if (kitchenFound == null) {
-            throw new EntityNotFoundException(String.format("Não existe um cadastro de cozinha com código %d", id));
-        }
+        Kitchen kitchenFound = kitchenRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Não existe um cadastro de cozinha com código %d", id)));
         BeanUtils.copyProperties(kitchen, kitchenFound, "id");
-        kitchenRepository.save(kitchenFound);
-        return kitchenFound;
+        return kitchenRepository.save(kitchenFound);
     }
 }

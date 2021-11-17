@@ -23,14 +23,12 @@ public class RegisterCityService {
     private CityRepository cityRepository;
 
     @Autowired
-    private StateRepository kitchenRepository;
+    private StateRepository stateRepository;
 
     public City save(City city) {
         Long kitchenId = city.getState().getId();
-        State kitchen = kitchenRepository.findById(kitchenId);
-        if (kitchen == null) {
-            throw new EntityNotFoundException(String.format("Não existe um cadastro de estado com código %d", kitchenId));
-        }
+        State kitchen = stateRepository.findById(kitchenId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Não existe um cadastro de estado com código %d", kitchenId)));
         city.setState(kitchen);
         return cityRepository.save(city);
     }
@@ -40,16 +38,13 @@ public class RegisterCityService {
     }
 
     public City findById(Long id) {
-        City city = cityRepository.findById(id);
-        if (city == null) {
-            throw new EntityNotFoundException(String.format("Não existe um cadastro de cidade com código %d", id));
-        }
-        return city;
+        return cityRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Não existe um cadastro de cidade com código %d", id)));
     }
 
     public void delete(Long id) {
         try {
-            cityRepository.delete(id);
+            cityRepository.deleteById(id);
         } catch (EmptyResultDataAccessException ex) {
             throw new EntityNotFoundException(String.format("Não existe um cadastro de cidade com código %d", id));
         } catch (DataIntegrityViolationException ex) {
@@ -58,20 +53,15 @@ public class RegisterCityService {
     }
 
     public City update(Long id, City city) {
-        City cityFound = cityRepository.findById(id);
-        if (cityFound == null) {
-            throw new CityNotFoundException(String.format("Não existe um cadastro de cidade com código %d", id));
-        }
+        City cityFound = cityRepository.findById(id)
+                .orElseThrow(() -> new CityNotFoundException(String.format("Não existe um cadastro de cidade com código %d", id)));
 
         Long kitchenId = city.getState().getId();
-        State kitchen = kitchenRepository.findById(kitchenId);
-        if (kitchen == null) {
-            throw new StateNotFoundException(String.format("Não existe um cadastro de estado com código %d", kitchenId));
-        }
+        State kitchen = stateRepository.findById(kitchenId)
+                .orElseThrow(() -> new StateNotFoundException(String.format("Não existe um cadastro de estado com código %d", kitchenId)));
         city.setState(kitchen);
 
         BeanUtils.copyProperties(city, cityFound, "id");
-        cityRepository.save(cityFound);
-        return cityFound;
+        return cityRepository.save(cityFound);
     }
 }

@@ -1,17 +1,10 @@
 package br.com.alopes.deliveryfood.domain.repository;
 
 import br.com.alopes.deliveryfood.domain.model.PaymentMethod;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface PaymentMethodRepository {
-
-    List<PaymentMethod> findAll();
-
-    PaymentMethod findById(Long id);
-
-    PaymentMethod save(PaymentMethod paymentMethod);
-
-    void delete(Long id);
+@Repository
+public interface PaymentMethodRepository extends JpaRepository<PaymentMethod, Long> {
 
 }

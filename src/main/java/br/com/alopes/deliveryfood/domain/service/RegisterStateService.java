@@ -27,16 +27,13 @@ public class RegisterStateService {
     }
 
     public State findById(Long id) {
-        State state = stateRepository.findById(id);
-        if (state == null) {
-            throw new EntityNotFoundException(String.format("Não existe um cadastro de estado com código %d", id));
-        }
-        return state;
+        return stateRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Não existe um cadastro de estado com código %d", id)));
     }
 
     public void delete(Long id) {
         try {
-            stateRepository.delete(id);
+            stateRepository.deleteById(id);
         } catch (EmptyResultDataAccessException ex) {
             throw new EntityNotFoundException(String.format("Não existe um cadastro de estado com código %d", id));
         } catch (DataIntegrityViolationException ex) {
@@ -45,12 +42,9 @@ public class RegisterStateService {
     }
 
     public State update(Long id, State state) {
-        State stateFound = stateRepository.findById(id);
-        if (stateFound == null) {
-            throw new EntityNotFoundException(String.format("Não existe um cadastro de estado com código %d", id));
-        }
+        State stateFound = stateRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("Não existe um cadastro de estado com código %d", id)));
         BeanUtils.copyProperties(state, stateFound, "id");
-        stateRepository.save(stateFound);
-        return stateFound;
+        return stateRepository.save(stateFound);
     }
 }
